@@ -85,7 +85,7 @@ def rust_run_single_gp(
 
 def run_multiple_gps(
     x_inputs,
-    y_inputs,
+    y_inputs_mean_removed,
     forecast_spacing,
     forecast_amount,
     length_scale=30,
@@ -106,13 +106,8 @@ def run_multiple_gps(
 
     start_indices = np.array(start_indices, dtype=np.uint64)
 
-    y_input_array = np.array(y_inputs, dtype=np.float64)
-
+    y_input_array = np.concatenate(y_inputs_mean_removed).ravel().astype(np.float64)
     x_input_array = np.concatenate(x_inputs).ravel().astype(np.float64)
-
-    y_input_means = np.mean(y_input_array, axis=1, keepdims=True)
-
-    y_input_array = (y_input_array - y_input_means).ravel()
 
     result = np.empty(
         x_input_array.size + (forecast_amount * number_of_inputs), dtype=np.float64
@@ -152,13 +147,10 @@ def run_multiple_gps(
 
         if i + 1 >= len(start_indices):
 
-            single_result = result[start_indices[int(i)] :] + y_input_means[i]
+            single_result = result[start_indices[int(i)] :]
         else:
 
-            single_result = (
-                result[start_indices[int(i)] : int(start_indices[i + 1])]
-                + y_input_means[i]
-            )
+            single_result = result[start_indices[int(i)] : int(start_indices[i + 1])]
 
         results.append(single_result)
 
