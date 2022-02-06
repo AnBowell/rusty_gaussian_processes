@@ -58,17 +58,17 @@ def main():
             vci3m_to_run = VCI3M[:hindcast_counter]
             days_to_run = days[:hindcast_counter]
 
-            new_dates, rust_smoothed_data = gaussian_process.forecast(
-                days_to_run, vci3m_to_run
-            )
-            # rust_smoothed_data = rust_gaussian_process.rust_run_gp(
-            #     days_to_run,
-            #     vci3m_to_run,
-            #     forecast_spacing=7,
-            #     forecast_amount=forecast_amount,
-            #     length_scale=40,
-            #     amplitude=2,
+            # new_dates, rust_smoothed_data = gaussian_process.forecast(
+            #     days_to_run, vci3m_to_run
             # )
+            rust_smoothed_data = rust_gaussian_process.rust_run_single_gp(
+                days_to_run,
+                vci3m_to_run,
+                forecast_spacing=7,
+                forecast_amount=forecast_amount,
+                length_scale=40,
+                amplitude=2,
+            )
 
             rust_end = perf_counter()
             print("Rust GP done. This took {}s".format(rust_end - rust_start))
