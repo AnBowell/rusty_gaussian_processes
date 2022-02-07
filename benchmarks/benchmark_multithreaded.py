@@ -40,7 +40,10 @@ days = np.array([(date - dates[0]).days for date in dates], dtype=np.float64)
 
 rust_multiple_times, rust_single_times, python_times = [], [], []
 
-amounts_to_test = [1, 5, 10, 20]
+
+# TODO For the slow runs like Python and Rust single. I should just run 100 and
+# TODO get all the measurements from that single run.
+amounts_to_test = [1, 5, 10, 20, 50]
 
 for amount_of_runs in amounts_to_test:
 
@@ -106,6 +109,8 @@ for amount_of_runs in amounts_to_test:
     # print("Time take to process = {}s".format(end_time - start_time))
     python_times.append(python_time)
 
+    print(amount_of_runs, "runs have been completed.")
+
 
 fig, ax1 = plt.subplots(figsize=(8, 5))
 
@@ -133,6 +138,9 @@ ax1.plot(
 )
 
 ax1.grid(True, alpha=0.6, ls="--")
+ax1.legend()
 
-
+ax1.set_ylabel("Time taken / s")
+ax1.set_xlabel("Amount of train cycles for times series of length 1000")
+plt.savefig("benchmarks/outputs/amount_of_trains_vs_time.png", dpi=500)
 plt.show()
