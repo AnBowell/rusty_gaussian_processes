@@ -1,8 +1,12 @@
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
 import numpy as np
 import pandas as pd
-import gaussian_process
+from gaussian_processes import (gaussian_process, rust_gaussian_process)
 from time import perf_counter
-import rust_gaussian_process
 import matplotlib.pyplot as plt
 
 data = pd.read_csv("data/proc_test_vci3m.csv")

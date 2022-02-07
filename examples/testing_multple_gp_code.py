@@ -1,8 +1,8 @@
 from os import X_OK
 import h5py as h5
 import numpy as np
-import gaussian_process
-import rust_gaussian_process
+import gaussian_processes.gaussian_process as gaussian_process
+import gaussian_processes.rust_gaussian_process as rust_gaussian_process
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 from time import perf_counter
