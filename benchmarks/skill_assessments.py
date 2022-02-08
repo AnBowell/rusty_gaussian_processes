@@ -1,7 +1,12 @@
-from msilib.schema import File
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
 import h5py as h5
 import numpy as np
 import gaussian_processes.gaussian_process as gaussian_process
+from sklearn.metrics import r2_score
 import gaussian_processes.rust_gaussian_process as rust_gaussian_process
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
@@ -13,6 +18,9 @@ forecast_amount = 10
 
 
 def main():
+
+    rmse_results = []
+    r2_results = []
 
     for key_name in data_file.keys():
 
@@ -71,35 +79,44 @@ def main():
             y_inputs_mean_removed,
             forecast_spacing=7,
             forecast_amount=10,
-            length_scale=25,
-            amplitude=2,
-            noise=0.5,
+            length_scale=50,
+            amplitude=0.5,
+            noise=0.01,
         )
 
-        final_results = []
-        rmse = []
+        r2_scores = []
+        rmses = []
+        for i in range(10, 0, -1):
 
-        for result, y_means, actual in zip(results, y_inputs_means, actual_values):
+            rmses.append(
+                np.sqrt(
+                    np.mean(
+                        (
+                            np.array(actual_values)[:, -i]
+                            - (np.array(results)[:, -i] + np.array(y_inputs_means))
+                        )
+                        ** 2,
+                        axis=0,
+                    )
+                )
+            )
 
-            # forecast_vci = np.full(10, -999)
+            r2_scores.append(
+                r2_score(
+                    np.array(actual_values)[:, -i],
+                    np.array(results)[:, -i] + np.array(y_inputs_means),
+                )
+            )
 
-            # for i in range(1, 11):
+        print("Dataset: {}".format(key_name))
+        # print(np.mean(rmse, axis=0))
+        print(rmses)
+        print(r2_scores)
+        rmse_results.append(rmses)
+        r2_results.append(r2_scores)
 
-            #     forecast_vci[i - 1] = np.mean(result[(-12) + i :-10+1] + y_means)
-
-            forecast_vci = result[-10:] + y_means
-
-            final_results.append(abs(actual - forecast_vci))
-            rmse.append(abs(actual - forecast_vci) ** 2)
-
-        print("Dataset: {}".format(dataset))
-        print(np.sqrt(np.mean(rmse, axis=0)))
-        print(np.std(final_results, axis=0))
-        # print(np.mean(final_results, axis=0))
-
-        # break
-        print("Done")
-
+    np.save("benchmarks/outputs/vci3m_rmse.npy", np.array(rmse_results))
+    np.save("benchmarks/outputs/vci3m_r2.npy", np.array(r2_results))
     print("Done")
 
 

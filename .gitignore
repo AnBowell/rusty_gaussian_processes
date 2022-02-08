@@ -3,3 +3,5 @@ Cargo.lock
 data/
 examples/GaussianProcesses.py
 *.pyc
+*.npy
+*.csv

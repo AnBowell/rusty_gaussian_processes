@@ -1,10 +1,5 @@
-from os import X_OK
-import h5py as h5
 import numpy as np
-import gaussian_processes.gaussian_process as gaussian_process
 import gaussian_processes.rust_gaussian_process as rust_gaussian_process
-from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
 from time import perf_counter
 import pandas as pd
 
@@ -38,27 +33,3 @@ results = rust_gaussian_process.run_multiple_gps(
 end_time = perf_counter()
 
 print("Rust multithreaded GP took {}s".format(end_time - start_time))
-
-
-# for result in results:
-#     print(len(result))
-#     plt.plot(
-#         days_since[test_start : test_end + 10],
-#         vci[test_start : test_end + 10],
-#         label="Raw",
-#         color="green",
-#     )
-#     plt.plot(
-#         np.concatenate(
-#             [
-#                 days_since[test_start:test_end],
-#                 days_since[test_start:test_end][-1]
-#                 + np.arange(1, forecast_amount + 1) * forecast_spacing,
-#             ]
-#         ),
-#         result,
-#         color="blue",
-#         label="Forecast",
-#     )
-#     plt.legend()
-#     plt.show()

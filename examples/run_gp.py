@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import numpy as np
 import pandas as pd
-from gaussian_processes import (gaussian_process, rust_gaussian_process)
+from gaussian_processes import gaussian_process, rust_gaussian_process
 from time import perf_counter
 import matplotlib.pyplot as plt
 
