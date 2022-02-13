@@ -32,12 +32,12 @@ pub async fn multiple_gps(
     };
 
     let input_indices: &mut [usize] = unsafe {
-        assert!(!x_input_ptr.is_null());
+        assert!(!input_indices_ptr.is_null());
         std::slice::from_raw_parts_mut(input_indices_ptr, input_indices_size)
     };
 
     let output: &mut [f64] = unsafe {
-        assert!(!y_input_ptr.is_null());
+        assert!(!output_ptr.is_null());
         std::slice::from_raw_parts_mut(output_ptr, output_size)
     };
 
