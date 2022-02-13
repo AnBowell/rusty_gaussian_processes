@@ -51,9 +51,10 @@ def rust_run_single_gp(
     noise=0.01,
 ):
     """Wrapper function to run a single GP through the Rust library.
-
     Simply pass the x and y you want to fit, a forecast of spacing and amount,
-    and this wrapper will call the Rust function.
+    and this wrapper will call the Rust function. The y input in this case
+    should not have the mean removed and any Nans/infs etc should be removed
+    from the dataset.
 
 
     Args:
@@ -72,6 +73,8 @@ def rust_run_single_gp(
 
     result = np.empty(x_input.size + forecast_amount)
 
+    # If data is not contiguous, using sending a pointer of the NumPy arrays
+    # to the Rust library will not work! So good to check.
     if not x_input.flags["C_CONTIGUOUS"]:
         x_input = np.ascontiguousarray(x_input)
 
